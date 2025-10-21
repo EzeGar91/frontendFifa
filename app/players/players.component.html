@@ -1,0 +1,15 @@
+<form [formGroup]="playerForm" (ngSubmit)="onSubmit()">
+  <input formControlName="name" placeholder="Name" />
+  <input formControlName="age" type="number" placeholder="Age" />
+  <input formControlName="nationality" placeholder="Nationality" />
+  <input formControlName="club" placeholder="Club" />
+  <input formControlName="overall" type="number" placeholder="Overall" />
+  <button type="submit">Add Player</button>
+</form>
+
+<ul>
+  <li *ngFor="let p of players">
+    {{ p.name }} ({{ p.age }}) - {{ p.club }} - {{ p.overall }}
+    <button (click)="deletePlayer(p.id!)">Delete</button>
+  </li>
+</ul>
