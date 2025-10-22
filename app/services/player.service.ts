@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Player } from '../models/player.model';
 import { Observable } from 'rxjs';
+
+export interface PlayerFilters {
+  name?: string;
+  club?: string;
+  position?: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +19,41 @@ export class PlayerService {
 
   getAll(): Observable<Player[]> {
     return this.http.get<Player[]>(this.apiUrl);
+  }
+
+  getFiltered(filters: PlayerFilters): Observable<Player[]> {
+    let params = new HttpParams();
+    
+    if (filters.name) {
+      params = params.set('name', filters.name);
+    }
+    if (filters.club) {
+      params = params.set('club', filters.club);
+    }
+    if (filters.position) {
+      params = params.set('position', filters.position);
+    }
+
+    return this.http.get<Player[]>(`${this.apiUrl}/search`, { params });
+  }
+
+  downloadCSV(filters: PlayerFilters): Observable<Blob> {
+    let params = new HttpParams();
+    
+    if (filters.name) {
+      params = params.set('name', filters.name);
+    }
+    if (filters.club) {
+      params = params.set('club', filters.club);
+    }
+    if (filters.position) {
+      params = params.set('position', filters.position);
+    }
+
+    return this.http.get(`${this.apiUrl}/export`, { 
+      params,
+      responseType: 'blob'
+    });
   }
 
   create(player: Player): Observable<Player> {

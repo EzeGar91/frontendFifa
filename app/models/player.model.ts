@@ -4,5 +4,6 @@ export interface Player {
   age: number;
   nationality: string;
   club: string;
+  position: string;
   overall: number;
 }
