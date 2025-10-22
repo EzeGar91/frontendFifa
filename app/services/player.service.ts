@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Player } from '../models/player.model';
+import { Player, PlayerResponse } from '../models/player.model';
 import { Observable } from 'rxjs';
 
 export interface PlayerFilters {
@@ -17,11 +17,11 @@ export class PlayerService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<Player[]> {
-    return this.http.get<Player[]>(this.apiUrl);
+  getAll(): Observable<PlayerResponse> {
+    return this.http.get<PlayerResponse>(this.apiUrl);
   }
 
-  getFiltered(filters: PlayerFilters): Observable<Player[]> {
+  getFiltered(filters: PlayerFilters): Observable<PlayerResponse> {
     let params = new HttpParams();
     
     if (filters.name) {
@@ -34,7 +34,7 @@ export class PlayerService {
       params = params.set('position', filters.position);
     }
 
-    return this.http.get<Player[]>(`${this.apiUrl}/search`, { params });
+    return this.http.get<PlayerResponse>(`${this.apiUrl}/search`, { params });
   }
 
   downloadCSV(filters: PlayerFilters): Observable<Blob> {

@@ -17,6 +17,12 @@ export class DashboardComponent implements OnInit {
   filteredPlayers: Player[] = [];
   isLoading = false;
   totalResults = 0;
+  
+  // Paginación
+  currentPage = 1;
+  pageSize = 20;
+  totalPages = 0;
+  displayedPlayers: Player[] = [];
 
   // Opciones para el dropdown de posiciones
   positions = [
@@ -58,10 +64,11 @@ export class DashboardComponent implements OnInit {
   private loadAllPlayers() {
     this.isLoading = true;
     this.playerService.getAll().subscribe({
-      next: (data) => {
-        this.players = data;
-        this.filteredPlayers = data;
-        this.totalResults = data.length;
+      next: (response) => {
+        this.players = response.data;
+        this.filteredPlayers = response.data;
+        this.totalResults = response.count;
+        this.updatePagination();
         this.isLoading = false;
       },
       error: (error) => {
@@ -90,9 +97,11 @@ export class DashboardComponent implements OnInit {
 
     this.isLoading = true;
     this.playerService.getFiltered(filters).subscribe({
-      next: (data) => {
-        this.filteredPlayers = data;
-        this.totalResults = data.length;
+      next: (response) => {
+        this.filteredPlayers = response.data;
+        this.totalResults = response.count;
+        this.currentPage = 1; // Reset a la primera página
+        this.updatePagination();
         this.isLoading = false;
       },
       error: (error) => {
@@ -106,6 +115,54 @@ export class DashboardComponent implements OnInit {
     this.searchForm.reset();
     this.filteredPlayers = this.players;
     this.totalResults = this.players.length;
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.filteredPlayers.length / this.pageSize);
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.displayedPlayers = this.filteredPlayers.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.goToPage(this.currentPage + 1);
+    }
+  }
+
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.goToPage(this.currentPage - 1);
+    }
+  }
+
+  getPageNumbers(): number[] {
+    const pages: number[] = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
+    
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  getMinValue(a: number, b: number): number {
+    return Math.min(a, b);
   }
 
   downloadCSV() {

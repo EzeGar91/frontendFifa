@@ -1,21 +1,25 @@
 <form [formGroup]="playerForm" (ngSubmit)="onSubmit()">
-  <input formControlName="name" placeholder="Nombre" />
+  <input formControlName="long_name" placeholder="Nombre completo" />
   <input formControlName="age" type="number" placeholder="Edad" />
-  <input formControlName="nationality" placeholder="Nacionalidad" />
-  <input formControlName="club" placeholder="Club" />
-  <select formControlName="position">
+  <input formControlName="nationality_name" placeholder="Nacionalidad" />
+  <input formControlName="club_name" placeholder="Club" />
+  <select formControlName="player_positions">
     <option value="">Seleccionar posición</option>
     <option *ngFor="let position of positions" [value]="position">
       {{ position }}
     </option>
   </select>
   <input formControlName="overall" type="number" placeholder="Overall" />
+  <input formControlName="potential" type="number" placeholder="Potencial" />
+  <input formControlName="value_eur" type="number" placeholder="Valor (EUR)" />
+  <input formControlName="height_cm" type="number" placeholder="Altura (cm)" />
+  <input formControlName="preferred_foot" placeholder="Pie preferido" />
   <button type="submit">Agregar Jugador</button>
 </form>
 
 <ul>
   <li *ngFor="let p of players">
-    {{ p.name }} ({{ p.age }}) - {{ p.club }} - {{ p.position }} - {{ p.overall }}
+    {{ p.long_name }} ({{ p.age }}) - {{ p.club_name }} - {{ p.player_positions }} - {{ p.overall }}
     <button (click)="deletePlayer(p.id!)">Eliminar</button>
   </li>
 </ul>

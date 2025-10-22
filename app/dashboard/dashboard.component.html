@@ -95,11 +95,11 @@
 
     <div *ngIf="filteredPlayers.length > 0" class="players-grid">
       <div 
-        *ngFor="let player of filteredPlayers" 
+        *ngFor="let player of displayedPlayers" 
         class="player-card"
       >
         <div class="player-header">
-          <h3 class="player-name">{{ player.name }}</h3>
+          <h3 class="player-name">{{ player.long_name }}</h3>
           <div class="player-overall">{{ player.overall }}</div>
         </div>
         
@@ -111,24 +111,80 @@
           
           <div class="player-info">
             <span class="info-label">Club:</span>
-            <span class="info-value">{{ player.club }}</span>
+            <span class="info-value">{{ player.club_name }}</span>
           </div>
           
           <div class="player-info">
             <span class="info-label">Nacionalidad:</span>
-            <span class="info-value">{{ player.nationality }}</span>
+            <span class="info-value">{{ player.nationality_name }}</span>
           </div>
           
           <div class="player-info">
             <span class="info-label">Posición:</span>
             <span 
               class="info-value position-badge"
-              [ngClass]="getPositionClass(player.position)"
+              [ngClass]="getPositionClass(player.player_positions)"
             >
-              {{ player.position }}
+              {{ player.player_positions }}
             </span>
           </div>
+          
+          <div class="player-info" *ngIf="player.potential">
+            <span class="info-label">Potencial:</span>
+            <span class="info-value">{{ player.potential }}</span>
+          </div>
+          
+          <div class="player-info" *ngIf="player.value_eur">
+            <span class="info-label">Valor:</span>
+            <span class="info-value">{{ player.value_eur | currency:'EUR':'symbol':'1.0-0' }}</span>
+          </div>
+          
+          <div class="player-info" *ngIf="player.height_cm">
+            <span class="info-label">Altura:</span>
+            <span class="info-value">{{ player.height_cm }} cm</span>
+          </div>
+          
+          <div class="player-info" *ngIf="player.preferred_foot">
+            <span class="info-label">Pie preferido:</span>
+            <span class="info-value">{{ player.preferred_foot }}</span>
+          </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Controles de Paginación -->
+    <div *ngIf="filteredPlayers.length > pageSize" class="pagination-container">
+      <div class="pagination-info">
+        Mostrando {{ (currentPage - 1) * pageSize + 1 }} - {{ getMinValue(currentPage * pageSize, filteredPlayers.length) }} de {{ filteredPlayers.length }} jugadores
+      </div>
+      
+      <div class="pagination-controls">
+        <button 
+          (click)="previousPage()" 
+          [disabled]="currentPage === 1"
+          class="pagination-btn"
+        >
+          ← Anterior
+        </button>
+        
+        <div class="page-numbers">
+          <button 
+            *ngFor="let page of getPageNumbers()"
+            (click)="goToPage(page)"
+            [class.active]="page === currentPage"
+            class="page-btn"
+          >
+            {{ page }}
+          </button>
+        </div>
+        
+        <button 
+          (click)="nextPage()" 
+          [disabled]="currentPage === totalPages"
+          class="pagination-btn"
+        >
+          Siguiente →
+        </button>
       </div>
     </div>
   </div>

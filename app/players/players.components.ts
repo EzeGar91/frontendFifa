@@ -32,19 +32,26 @@ export class PlayersComponent implements OnInit {
 
   ngOnInit() {
     this.playerForm = this.fb.group({
-      name: ['', Validators.required],
+      long_name: ['', Validators.required],
       age: [0, [Validators.required, Validators.min(1)]],
-      nationality: [''],
-      club: [''],
-      position: [''],
+      nationality_name: [''],
+      club_name: [''],
+      player_positions: [''],
       overall: [50, [Validators.required, Validators.min(0), Validators.max(100)]],
+      potential: [50, [Validators.min(0), Validators.max(100)]],
+      value_eur: [0, [Validators.min(0)]],
+      wage_eur: [0, [Validators.min(0)]],
+      height_cm: [0, [Validators.min(0)]],
+      weight_kg: [0, [Validators.min(0)]],
+      preferred_foot: [''],
+      work_rate: ['']
     });
 
     this.loadPlayers();
   }
 
   loadPlayers() {
-    this.playerService.getAll().subscribe(data => this.players = data);
+    this.playerService.getAll().subscribe(response => this.players = response.data);
   }
 
   onSubmit() {
