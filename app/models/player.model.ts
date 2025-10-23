@@ -1,18 +1,19 @@
 export interface Player {
   id?: number;
-  long_name: string;
+  name: string;
   age: number;
-  nationality_name: string;
-  club_name: string;
-  player_positions: string;
+  nationality: string;
+  club: string;
+  position: string;
   overall: number;
-  potential?: number;
-  value_eur?: number;
-  wage_eur?: number;
-  height_cm?: number;
-  weight_kg?: number;
-  preferred_foot?: string;
-  work_rate?: string;
+  
+  // Skills principales
+  pace?: number;
+  shooting?: number;
+  passing?: number;
+  dribbling?: number;
+  defending?: number;
+  physical?: number;
 }
 
 export interface PlayerResponse {

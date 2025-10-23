@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { PlayerService, PlayerFilters } from '../services/player.service';
 import { Player } from '../models/player.model';
 
@@ -8,7 +9,7 @@ import { Player } from '../models/player.model';
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterModule],
   standalone: true
 })
 export class DashboardComponent implements OnInit {
@@ -40,7 +41,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private playerService: PlayerService
+    private playerService: PlayerService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -207,5 +209,9 @@ export class DashboardComponent implements OnInit {
       'Centro delantero': 'position-striker'
     };
     return positionMap[position] || 'position-default';
+  }
+
+  viewPlayerDetails(playerId: number) {
+    this.router.navigate(['/player', playerId]);
   }
 }

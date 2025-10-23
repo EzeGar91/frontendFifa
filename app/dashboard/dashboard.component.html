@@ -99,7 +99,7 @@
         class="player-card"
       >
         <div class="player-header">
-          <h3 class="player-name">{{ player.long_name }}</h3>
+          <h3 class="player-name">{{ player.name }}</h3>
           <div class="player-overall">{{ player.overall }}</div>
         </div>
         
@@ -111,43 +111,54 @@
           
           <div class="player-info">
             <span class="info-label">Club:</span>
-            <span class="info-value">{{ player.club_name }}</span>
+            <span class="info-value">{{ player.club }}</span>
           </div>
           
           <div class="player-info">
             <span class="info-label">Nacionalidad:</span>
-            <span class="info-value">{{ player.nationality_name }}</span>
+            <span class="info-value">{{ player.nationality }}</span>
           </div>
           
           <div class="player-info">
             <span class="info-label">Posición:</span>
             <span 
               class="info-value position-badge"
-              [ngClass]="getPositionClass(player.player_positions)"
+              [ngClass]="getPositionClass(player.position)"
             >
-              {{ player.player_positions }}
+              {{ player.position }}
             </span>
           </div>
           
-          <div class="player-info" *ngIf="player.potential">
-            <span class="info-label">Potencial:</span>
-            <span class="info-value">{{ player.potential }}</span>
+          <div class="player-info" *ngIf="player.pace">
+            <span class="info-label">Pace:</span>
+            <span class="info-value">{{ player.pace }}</span>
           </div>
           
-          <div class="player-info" *ngIf="player.value_eur">
-            <span class="info-label">Valor:</span>
-            <span class="info-value">{{ player.value_eur | currency:'EUR':'symbol':'1.0-0' }}</span>
+          <div class="player-info" *ngIf="player.shooting">
+            <span class="info-label">Shooting:</span>
+            <span class="info-value">{{ player.shooting }}</span>
           </div>
           
-          <div class="player-info" *ngIf="player.height_cm">
-            <span class="info-label">Altura:</span>
-            <span class="info-value">{{ player.height_cm }} cm</span>
+          <div class="player-info" *ngIf="player.passing">
+            <span class="info-label">Passing:</span>
+            <span class="info-value">{{ player.passing }}</span>
           </div>
           
-          <div class="player-info" *ngIf="player.preferred_foot">
-            <span class="info-label">Pie preferido:</span>
-            <span class="info-value">{{ player.preferred_foot }}</span>
+          <div class="player-info" *ngIf="player.dribbling">
+            <span class="info-label">Dribbling:</span>
+            <span class="info-value">{{ player.dribbling }}</span>
           </div>
+        </div>
+        
+        <div class="player-actions">
+          <button 
+            (click)="viewPlayerDetails(player.id!)" 
+            class="btn btn-details"
+            *ngIf="player.id"
+          >
+            <i class="details-icon">📊</i>
+            Ver Detalles
+          </button>
         </div>
       </div>
     </div>

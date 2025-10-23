@@ -1,0 +1,25 @@
+<header class="app-header">
+  <div class="header-content">
+    <div class="header-left">
+      <button (click)="goToDashboard()" class="logo-button">
+        <span class="logo-icon">⚽</span>
+        <span class="logo-text">FIFA Dashboard</span>
+      </button>
+    </div>
+
+    <div class="header-right" *ngIf="isAuthenticated">
+      <div class="user-info">
+        <div class="user-details">
+          <span class="username">{{ user?.username }}</span>
+          <span class="user-role" [ngClass]="'role-' + user?.role">
+            {{ user?.role === 'admin' ? 'Administrador' : 'Usuario' }}
+          </span>
+        </div>
+        <button (click)="logout()" class="logout-button">
+          <span class="logout-icon">🚪</span>
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

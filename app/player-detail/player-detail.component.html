@@ -1,0 +1,150 @@
+<div class="player-detail-container">
+  <!-- Header con botón de regreso -->
+  <div class="detail-header">
+    <button (click)="goBack()" class="back-button">
+      <i class="back-icon">←</i>
+      Volver al Dashboard
+    </button>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando detalles del jugador...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error && !isLoading" class="error-container">
+    <div class="error-icon">⚠️</div>
+    <h3>Error</h3>
+    <p>{{ error }}</p>
+    <button (click)="goBack()" class="btn btn-primary">Volver al Dashboard</button>
+  </div>
+
+  <!-- Player Details -->
+  <div *ngIf="player && !isLoading" class="player-details">
+    <!-- Player Header Card -->
+    <div class="player-header-card">
+      <div class="player-basic-info">
+        <div class="player-name-section">
+          <h1 class="player-name">{{ player.name }}</h1>
+          <div class="player-overall" [ngClass]="getOverallColor(player.overall)">
+            {{ player.overall }}
+          </div>
+        </div>
+        
+        <div class="player-info-grid">
+          <div class="info-item">
+            <span class="info-label">Edad:</span>
+            <span class="info-value">{{ player.age }} años</span>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-label">Club:</span>
+            <span class="info-value">{{ player.club }}</span>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-label">Nacionalidad:</span>
+            <span class="info-value">{{ player.nationality }}</span>
+          </div>
+          
+          <div class="info-item">
+            <span class="info-label">Posición:</span>
+            <span 
+              class="info-value position-badge"
+              [ngClass]="getPositionClass(player.position)"
+            >
+              {{ player.position }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skills Chart Section -->
+    <div class="skills-section">
+      <div class="skills-header">
+        <h2>Análisis de Skills</h2>
+        <p>Selecciona una categoría para ver el radar chart de skills</p>
+      </div>
+
+      <!-- Category Selector -->
+      <div class="category-selector">
+        <form [formGroup]="playerForm">
+          <div class="form-group">
+            <label for="category">Categoría de Skills:</label>
+            <select 
+              id="category"
+              formControlName="category" 
+              class="form-select"
+            >
+              <option *ngFor="let category of Object.keys(skillCategories)" [value]="category">
+                {{ category }}
+              </option>
+            </select>
+          </div>
+        </form>
+      </div>
+
+      <!-- Chart Container -->
+      <div class="chart-container">
+        <canvas #radarChart></canvas>
+      </div>
+    </div>
+
+    <!-- Skills Summary -->
+    <div class="skills-summary">
+      <h3>Resumen de Skills Principales</h3>
+      <div class="skills-grid">
+        <div class="skill-item" *ngIf="player.pace">
+          <div class="skill-name">Velocidad</div>
+          <div class="skill-bar">
+            <div class="skill-fill" [style.width.%]="player.pace"></div>
+          </div>
+          <div class="skill-value">{{ player.pace }}</div>
+        </div>
+        
+        <div class="skill-item" *ngIf="player.shooting">
+          <div class="skill-name">Disparo</div>
+          <div class="skill-bar">
+            <div class="skill-fill" [style.width.%]="player.shooting"></div>
+          </div>
+          <div class="skill-value">{{ player.shooting }}</div>
+        </div>
+        
+        <div class="skill-item" *ngIf="player.passing">
+          <div class="skill-name">Pase</div>
+          <div class="skill-bar">
+            <div class="skill-fill" [style.width.%]="player.passing"></div>
+          </div>
+          <div class="skill-value">{{ player.passing }}</div>
+        </div>
+        
+        <div class="skill-item" *ngIf="player.dribbling">
+          <div class="skill-name">Regate</div>
+          <div class="skill-bar">
+            <div class="skill-fill" [style.width.%]="player.dribbling"></div>
+          </div>
+          <div class="skill-value">{{ player.dribbling }}</div>
+        </div>
+        
+        <div class="skill-item" *ngIf="player.defending">
+          <div class="skill-name">Defensa</div>
+          <div class="skill-bar">
+            <div class="skill-fill" [style.width.%]="player.defending"></div>
+          </div>
+          <div class="skill-value">{{ player.defending }}</div>
+        </div>
+        
+        <div class="skill-item" *ngIf="player.physical">
+          <div class="skill-name">Físico</div>
+          <div class="skill-bar">
+            <div class="skill-fill" [style.width.%]="player.physical"></div>
+          </div>
+          <div class="skill-value">{{ player.physical }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

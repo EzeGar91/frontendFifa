@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Player, PlayerResponse } from '../models/player.model';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 export interface PlayerFilters {
   name?: string;
@@ -15,10 +16,21 @@ export interface PlayerFilters {
 export class PlayerService {
   private apiUrl = 'http://localhost:3000/api/players';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
+
+  private getHeaders(): HttpHeaders {
+    const token = this.authService.getToken();
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      ...(token && { 'Authorization': `Bearer ${token}` })
+    });
+  }
 
   getAll(): Observable<PlayerResponse> {
-    return this.http.get<PlayerResponse>(this.apiUrl);
+    return this.http.get<PlayerResponse>(this.apiUrl, { headers: this.getHeaders() });
   }
 
   getFiltered(filters: PlayerFilters): Observable<PlayerResponse> {
@@ -34,7 +46,10 @@ export class PlayerService {
       params = params.set('position', filters.position);
     }
 
-    return this.http.get<PlayerResponse>(`${this.apiUrl}/search`, { params });
+    return this.http.get<PlayerResponse>(`${this.apiUrl}/search`, { 
+      params,
+      headers: this.getHeaders()
+    });
   }
 
   downloadCSV(filters: PlayerFilters): Observable<Blob> {
@@ -52,19 +67,24 @@ export class PlayerService {
 
     return this.http.get(`${this.apiUrl}/export`, { 
       params,
+      headers: this.getHeaders(),
       responseType: 'blob'
     });
   }
 
   create(player: Player): Observable<Player> {
-    return this.http.post<Player>(this.apiUrl, player);
+    return this.http.post<Player>(this.apiUrl, player, { headers: this.getHeaders() });
   }
 
   update(id: number, player: Player): Observable<Player> {
-    return this.http.put<Player>(`${this.apiUrl}/${id}`, player);
+    return this.http.put<Player>(`${this.apiUrl}/${id}`, player, { headers: this.getHeaders() });
   }
 
   delete(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.http.delete(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+  }
+
+  getById(id: number): Observable<{success: boolean, data: Player}> {
+    return this.http.get<{success: boolean, data: Player}>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
   }
 }
